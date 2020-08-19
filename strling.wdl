@@ -1,29 +1,44 @@
 workflow SimpleVariantDiscovery {
+
+  meta {
+      author: "Harriet Dashnow"
+      email: "h.dashnow@gmail.com"
+      description: "Run STRling (github.com/quinlan-lab/STRling) in individual calling mode to detect and genotype STRs"
+  }
+
+  File manifest
+  Array[Array[File]] sample_data = read_tsv(manifest)
+
   File strling
   File ref_fasta
   File ref_str
-  File bam
-  File bam_index
-  String sample
 
-  call str_extract {
-    input:
-      strling = strling,
-      ref_fasta = ref_fasta,
-      ref_str = ref_str,
-      bam = bam,
-      bam_index = bam_index,
-      sample = sample
-  }
-   call str_call_individual {
-    input:
-      strling = strling,
-      ref_fasta = ref_fasta,
-      ref_str = ref_str,
-      bam = bam,
-      bam_index = bam_index,
-      sample = sample,
-      bin = str_extract.bin
+  scatter (sample_col in sample_data) {
+
+    call str_extract {
+      input:
+        strling = strling,
+        ref_fasta = ref_fasta,
+        ref_str = ref_str,
+
+        sample = sample_col[0],
+        bam = sample_col[1],
+        bam_index = sample_col[2],
+    }
+
+     call str_call_individual {
+      input:
+        strling = strling,
+        ref_fasta = ref_fasta,
+        ref_str = ref_str,
+        bin = str_extract.bin,
+
+        sample = sample_col[0],
+        bam = sample_col[1],
+        bam_index = sample_col[2],
+
+    }
+
   }
 
 }
