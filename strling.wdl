@@ -58,6 +58,13 @@ task str_extract {
       ${bam} \
       ${sample}.bin
   }
+  runtime {
+    memory: "4 GB"
+    cpu: 1
+    disks: "local-disk 100 HDD"
+    preemptible: 3
+    docker: "hdashnow/strling:latest"
+  }
   output {
     File bin = "${sample}.bin"
   }
@@ -84,6 +91,13 @@ task str_call_individual {
       -o ${sample} \
       ${bam} \
       ${bin}
+  }
+  runtime {
+    memory: "4 GB"
+    cpu: 1
+    disks: "local-disk 100 HDD"
+    preemptible: 3
+    docker: "hdashnow/strling:latest"
   }
   output {
     File output_bounds = "${sample}-bounds.txt"
