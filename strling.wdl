@@ -9,7 +9,6 @@ workflow SimpleVariantDiscovery {
   File manifest
   Array[Array[File]] sample_data = read_tsv(manifest)
 
-  File strling
   File ref_fasta
   File ref_str
 
@@ -17,7 +16,6 @@ workflow SimpleVariantDiscovery {
 
     call str_extract {
       input:
-        strling = strling,
         ref_fasta = ref_fasta,
         ref_str = ref_str,
 
@@ -28,7 +26,6 @@ workflow SimpleVariantDiscovery {
 
      call str_call_individual {
       input:
-        strling = strling,
         ref_fasta = ref_fasta,
         ref_str = ref_str,
         bin = str_extract.bin,
@@ -44,7 +41,6 @@ workflow SimpleVariantDiscovery {
 }
 
 task str_extract {
-  File strling
   File ref_fasta
   File ref_str
   String sample
@@ -52,7 +48,7 @@ task str_extract {
   File bam_index
 
   command {
-    ${strling} extract \
+    strling extract \
       -f ${ref_fasta} \
       -g ${ref_str} \
       ${bam} \
@@ -71,7 +67,6 @@ task str_extract {
 }
 
 task str_call_individual {
-  File strling
   File ref_fasta
   File ref_str
   String sample
@@ -80,13 +75,7 @@ task str_call_individual {
   File bin
 
   command {
-    ${strling} extract \
-      -f ${ref_fasta} \
-      -g ${ref_str} \
-      ${bam} \
-      ${sample}.bin
-
-    ${strling} call \
+    strling call \
       -f ${ref_fasta} \
       -o ${sample} \
       ${bam} \
