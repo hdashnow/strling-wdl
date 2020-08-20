@@ -7,23 +7,22 @@ workflow SimpleVariantDiscovery {
   }
 
   # Columns from the sample_set
-  Array[String] sample
-  Array[String] bam
-  Array[String] bam_index
+#  Array[String] samples
+  Array[String] bams
 
   File ref_fasta
   File ref_str
 
-  scatter (sample_col in sample_data) {
+  scatter (bam in bams) {
 
     call str_extract {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
 
-        sample = sample,
+#        sample = sample,
         bam = bam,
-        bam_index = bam_index,
+#        bam_index = bam_index,
     }
 
      call str_call_individual {
@@ -32,9 +31,9 @@ workflow SimpleVariantDiscovery {
         ref_str = ref_str,
         bin = str_extract.bin,
 
-        sample = sample,
+#        sample = sample,
         bam = bam,
-        bam_index = bam_index,
+#        bam_index = bam_index,
     }
 
   }
@@ -44,16 +43,16 @@ workflow SimpleVariantDiscovery {
 task str_extract {
   File ref_fasta
   File ref_str
-  String sample
+#  String sample
   File bam
-  File bam_index
+#  File bam_index
 
   command {
     strling extract \
       -f ${ref_fasta} \
       -g ${ref_str} \
       ${bam} \
-      ${sample}.bin
+      ${bam}.bin
   }
   runtime {
     memory: "4 GB"
@@ -63,22 +62,22 @@ task str_extract {
     docker: "hdashnow/strling:latest"
   }
   output {
-    File bin = "${sample}.bin"
+    File bin = "${bam}.bin"
   }
 }
 
 task str_call_individual {
   File ref_fasta
   File ref_str
-  String sample
+#  String sample
   File bam
-  File bam_index
+#  File bam_index
   File bin
 
   command {
     strling call \
       -f ${ref_fasta} \
-      -o ${sample} \
+      -o ${bam} \
       ${bam} \
       ${bin}
   }
@@ -90,9 +89,9 @@ task str_call_individual {
     docker: "hdashnow/strling:latest"
   }
   output {
-    File output_bounds = "${sample}-bounds.txt"
-    File output_unplaced = "${sample}-unplaced.txt"
-    File output_genotype = "${sample}-genotype.txt"
+    File output_bounds = "${bam}-bounds.txt"
+    File output_unplaced = "${bam}-unplaced.txt"
+    File output_genotype = "${bam}-genotype.txt"
   }
 }
 
