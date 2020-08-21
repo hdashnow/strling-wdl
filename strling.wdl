@@ -37,6 +37,7 @@ task str_extract {
   File ref_fasta
   File ref_str
   File cram
+  File crai = cram + ".crai"
   String sample = basename(cram, ".cram")
 
   command {
@@ -62,6 +63,7 @@ task str_call_individual {
   File ref_fasta
   File ref_str
   File cram
+  File crai = cram + ".crai"
   String sample = basename(cram, ".cram")
   File bin
 
