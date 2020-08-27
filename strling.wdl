@@ -1,4 +1,4 @@
-workflow SimpleVariantDiscovery {
+workflow strling_individual {
 
   meta {
       author: "Harriet Dashnow"
