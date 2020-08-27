@@ -3,5 +3,7 @@ WDL workflow for joint calling of novel and reference STR exapnsions using STRli
 
 Designed to run on Terra.
 
+See individual-calling branch if wanting to run samples individually (no joint calling)
+
 # Local usage
 `java -jar cromwell.jar run strling.wdl -i inputs.json`
