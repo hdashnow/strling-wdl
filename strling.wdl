@@ -1,4 +1,4 @@
-workflow SimpleVariantDiscovery {
+workflow strling_joint {
 
   meta {
       author: "Harriet Dashnow"
@@ -21,12 +21,23 @@ workflow SimpleVariantDiscovery {
         cram = cram,
     }
 
-     call str_call_individual {
+  }
+
+  call str_merge {
+    input:
+      ref_fasta = ref_fasta,
+      bins = str_extract.bin,
+  }
+
+  scatter (cram in crams) {
+
+     call str_call_joint {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
-        bin = str_extract.bin,
+        bins = str_extract.bin,
         cram = cram,
+        bounds = str_merge.bounds,
     }
 
   }
@@ -59,20 +70,44 @@ task str_extract {
   }
 }
 
-task str_call_individual {
+task str_merge {
+  File ref_fasta
+  Array[File] bins
+
+  command {
+    strling merge \
+      -f ${ref_fasta} \
+      ${bins}
+  }
+  runtime {
+    memory: "4 GB"
+    cpu: 1
+    disks: "local-disk 100 HDD"
+    preemptible: 3
+    docker: "hdashnow/strling:latest"
+  }
+  output {
+    File bounds = "strling-bounds.txt"
+  }
+}
+
+task str_call_joint {
   File ref_fasta
   File ref_str
   File cram
   File crai = cram + ".crai"
   String sample = basename(cram, ".cram")
-  File bin
+  Array[String] bins
+  File bounds
 
   command {
+    echo ${bins}
     strling call \
       -f ${ref_fasta} \
+      -b ${bounds} \
       -o ${sample} \
       ${cram} \
-      ${bin}
+      ${bins}
   }
   runtime {
     memory: "4 GB"
