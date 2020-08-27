@@ -29,15 +29,15 @@ workflow strling_joint {
       bins = str_extract.bin,
   }
 
-  scatter (cram in crams) {
+  scatter (pair in zip(crams, str_extract.bin)) {
 
      call str_call_joint {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
-        bins = str_extract.bin,
-        cram = cram,
         bounds = str_merge.bounds,
+        cram = pair.left,
+        bin = pair.right,
     }
 
   }
@@ -77,7 +77,7 @@ task str_merge {
   command {
     strling merge \
       -f ${ref_fasta} \
-      ${bins}
+      ${sep=' ' bins}
   }
   runtime {
     memory: "4 GB"
@@ -95,19 +95,18 @@ task str_call_joint {
   File ref_fasta
   File ref_str
   File cram
+  File bin
   File crai = cram + ".crai"
   String sample = basename(cram, ".cram")
-  Array[String] bins
   File bounds
 
   command {
-    echo ${bins}
     strling call \
       -f ${ref_fasta} \
       -b ${bounds} \
       -o ${sample} \
       ${cram} \
-      ${bins}
+      ${bin}
   }
   runtime {
     memory: "4 GB"
