@@ -6,19 +6,20 @@ workflow strling_joint {
       description: "Run STRling (github.com/quinlan-lab/STRling) in joint calling mode to detect and genotype STRs"
   }
 
-  # Columns from the sample_set
-  Array[String] crams
-
+  # manifest is tsv with columns sample_id, cram and crai
+  File manifest
+  Array[Array[File]] sample_data = read_tsv(manifest)
   File ref_fasta
   File ref_str
 
-  scatter (cram in crams) {
+  scatter (sample in sample_data) {
 
     call str_extract {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
-        cram = cram,
+        cram = sample[1],
+        crai = sample[2],
     }
 
   }
@@ -29,14 +30,15 @@ workflow strling_joint {
       bins = str_extract.bin,
   }
 
-  scatter (pair in zip(crams, str_extract.bin)) {
+  scatter (pair in zip(sample_data, str_extract.bin)) {
 
      call str_call_joint {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
         bounds = str_merge.bounds,
-        cram = pair.left,
+        cram = pair.left[1],
+        crai = pair.left[2],
         bin = pair.right,
     }
 
@@ -54,7 +56,7 @@ task str_extract {
   File ref_fasta
   File ref_str
   File cram
-  File crai = cram + ".crai"
+  File crai
   String sample = basename(cram, ".cram")
 
   command {
@@ -102,7 +104,7 @@ task str_call_joint {
   File ref_str
   File cram
   File bin
-  File crai = cram + ".crai"
+  File crai
   String sample = basename(cram, ".cram")
   File bounds
 
