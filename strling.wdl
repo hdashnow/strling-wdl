@@ -60,6 +60,7 @@ task str_extract {
   String sample = basename(cram, ".cram")
 
   command {
+    cp ${crai} ${cram}.crai && \
     strling extract \
       -f ${ref_fasta} \
       -g ${ref_str} \
@@ -109,6 +110,7 @@ task str_call_joint {
   File bounds
 
   command {
+    cp ${crai} ${cram}.crai && \
     strling call \
       -f ${ref_fasta} \
       -b ${bounds} \
