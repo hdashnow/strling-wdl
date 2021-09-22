@@ -6,7 +6,7 @@ workflow strling_joint {
       description: "Run STRling (github.com/quinlan-lab/STRling) in joint calling mode to detect and genotype STRs"
   }
 
-  # manifest is tsv with columns sample_id, cram and crai
+  # manifest is tsv with columns sampleID, cram and crai
   File manifest
   Array[Array[File]] sample_data = read_tsv(manifest)
   File ref_fasta
@@ -18,6 +18,7 @@ workflow strling_joint {
       input:
         ref_fasta = ref_fasta,
         ref_str = ref_str,
+        sampleID = sample[0],
         cram = sample[1],
         crai = sample[2],
     }
@@ -37,6 +38,7 @@ workflow strling_joint {
         ref_fasta = ref_fasta,
         ref_str = ref_str,
         bounds = str_merge.bounds,
+        sampleID = sample[0],
         cram = pair.left[1],
         crai = pair.left[2],
         bin = pair.right,
@@ -57,7 +59,7 @@ task str_extract {
   File ref_str
   File cram
   File crai
-  String sample = basename(cram, ".cram")
+  String sampleID
 
   command {
     cp ${crai} ${cram}.crai && \
@@ -65,7 +67,7 @@ task str_extract {
       -f ${ref_fasta} \
       -g ${ref_str} \
       ${cram} \
-      ${sample}.bin
+      ${sampleID}.bin
   }
   runtime {
     memory: "4 GB"
@@ -75,7 +77,7 @@ task str_extract {
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
   output {
-    File bin = "${sample}.bin"
+    File bin = "${sampleID}.bin"
   }
 }
 
@@ -106,7 +108,7 @@ task str_call_joint {
   File cram
   File bin
   File crai
-  String sample = basename(cram, ".cram")
+  String sampleID
   File bounds
 
   command {
@@ -114,7 +116,7 @@ task str_call_joint {
     strling call \
       -f ${ref_fasta} \
       -b ${bounds} \
-      -o ${sample} \
+      -o ${sampleID} \
       ${cram} \
       ${bin}
   }
@@ -126,9 +128,9 @@ task str_call_joint {
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
   output {
-    File output_bounds = "${sample}-bounds.txt"
-    File output_unplaced = "${sample}-unplaced.txt"
-    File output_genotype = "${sample}-genotype.txt"
+    File output_bounds = "${sampleID}-bounds.txt"
+    File output_unplaced = "${sampleID}-unplaced.txt"
+    File output_genotype = "${sampleID}-genotype.txt"
   }
 }
 
