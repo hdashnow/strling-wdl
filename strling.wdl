@@ -3,7 +3,7 @@ workflow strling_joint {
   meta {
       author: "Harriet Dashnow"
       email: "h.dashnow@gmail.com"
-      description: "Run STRling (github.com/quinlan-lab/STRling) in joint calling mode to detect and genotype STRs"
+      description: "Run STRling (github.com/quinlan-lab/STRling) in joint calling mode to detect and genotype STRs then perform outlier testing"
   }
 
   # manifest is tsv with columns sampleID, cram and crai
