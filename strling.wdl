@@ -38,7 +38,7 @@ workflow strling_joint {
         ref_fasta = ref_fasta,
         ref_str = ref_str,
         bounds = str_merge.bounds,
-        sampleID = sample[0],
+        sampleID = pair.left[0],
         cram = pair.left[1],
         crai = pair.left[2],
         bin = pair.right,
