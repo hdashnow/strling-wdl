@@ -153,5 +153,6 @@ task str_outlier {
   }
   output {
     File str_outliers = "STRs.tsv"
+    File control_file = "control-file.tsv"
   }
 }
