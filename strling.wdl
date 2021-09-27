@@ -70,9 +70,9 @@ task str_extract {
       ${sampleID}.bin
   }
   runtime {
-    memory: "4 GB"
+    memory: "8 GB"
     cpu: 1
-    disks: "local-disk 100 HDD"
+    disks: "local-disk 150 HDD"
     preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
@@ -91,9 +91,9 @@ task str_merge {
       ${sep=' ' bins}
   }
   runtime {
-    memory: "4 GB"
+    memory: "48 GB"
     cpu: 1
-    disks: "local-disk 100 HDD"
+    disks: "local-disk 700 HDD"
     preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
@@ -121,9 +121,9 @@ task str_call_joint {
       ${bin}
   }
   runtime {
-    memory: "4 GB"
+    memory: "8 GB"
     cpu: 1
-    disks: "local-disk 100 HDD"
+    disks: "local-disk 150 HDD"
     preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
@@ -145,9 +145,9 @@ task str_outlier {
       --emit control-file.tsv
   }
   runtime {
-    memory: "32 GB"
+    memory: "128 GB"
     cpu: 1
-    disks: "local-disk 100 HDD"
+    disks: "local-disk 700 HDD"
     preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
