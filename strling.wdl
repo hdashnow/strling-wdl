@@ -91,7 +91,7 @@ task str_merge {
       ${sep=' ' bins}
   }
   runtime {
-    memory: "48 GB"
+    memory: "264 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
     preemptible: 3
@@ -145,7 +145,7 @@ task str_outlier {
       --emit control-file.tsv
   }
   runtime {
-    memory: "128 GB"
+    memory: "264 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
     preemptible: 3
