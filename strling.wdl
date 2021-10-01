@@ -91,10 +91,9 @@ task str_merge {
       ${sep=' ' bins}
   }
   runtime {
-    memory: "264 GB"
+    memory: "512 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
-    preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
   output {
@@ -145,10 +144,9 @@ task str_outlier {
       --emit control-file.tsv
   }
   runtime {
-    memory: "264 GB"
+    memory: "512 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
-    preemptible: 3
     docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
   }
   output {
