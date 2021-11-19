@@ -74,7 +74,7 @@ task str_extract {
     cpu: 1
     disks: "local-disk 150 HDD"
     preemptible: 3
-    docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
+    docker: "quay.io/biocontainers/strling:0.5.1--h14cfee4_0"
   }
   output {
     File bin = "${sampleID}.bin"
@@ -94,7 +94,7 @@ task str_merge {
     memory: "512 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
-    docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
+    docker: "quay.io/biocontainers/strling:0.5.1--h14cfee4_0"
   }
   output {
     File bounds = "strling-bounds.txt"
@@ -124,7 +124,7 @@ task str_call_joint {
     cpu: 1
     disks: "local-disk 150 HDD"
     preemptible: 3
-    docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
+    docker: "quay.io/biocontainers/strling:0.5.1--h14cfee4_0"
   }
   output {
     File output_bounds = "${sampleID}-bounds.txt"
@@ -138,16 +138,17 @@ task str_outlier {
   Array[File] unplaceds
 
   command {
+    ln -s ${sep=' ' genotypes} ${sep=' ' unplaceds} . && \
     strling-outliers.py \
-      --genotypes ${sep=' ' genotypes} \
-      --unplaced ${sep=' ' unplaceds} \
+      --genotypes '*-genotype.txt' \
+      --unplaced '*-unplaced.txt' \
       --emit control-file.tsv
   }
   runtime {
     memory: "512 GB"
     cpu: 1
     disks: "local-disk 700 HDD"
-    docker: "quay.io/biocontainers/strling:0.5.0--h14cfee4_0"
+    docker: "quay.io/biocontainers/strling:0.5.1--h14cfee4_0"
   }
   output {
     File str_outliers = "STRs.tsv"
