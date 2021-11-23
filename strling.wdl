@@ -138,7 +138,8 @@ task str_outlier {
   Array[File] unplaceds
 
   command {
-    ln -s ${sep=' ' genotypes} ${sep=' ' unplaceds} . && \
+    ln -s ${sep=' ' genotypes} .
+    ln -s ${sep=' ' unplaceds} .
     strling-outliers.py \
       --genotypes '*-genotype.txt' \
       --unplaced '*-unplaced.txt' \
